@@ -1,35 +1,17 @@
 <?php
-
-require 'db_connect.php';
-if (isset($_POST["submit"])){
-    $name =$_POST["name"];
-    if($_FILES["image"]["error"]==4){
-        echo
-        "<script>alert('image Does Not Exist');</script>";
-    }
+$conn = mysqli_connect('localhost','root','','fashion');
+if(!$conn){
+    echo mysqli_connect_error();
 }
-else{
-    $filename =$_FILES["image"]["name"];
-    $filesize =$_FILES["image"]["size"];
-    $tmpname = $_FILES["image"]["tmp_name"];
-
-    $validImageExtention = ['jpg','jpeg','png'];
-    $imageExtension = explode('.',$filename);
-    $imageExtension=strtolower(end($imageExtension));
-    if(!in_array($imageExtension,$validImageExtention)){
-        echo
-        "<script> alert ('Invalid Image Extention');</script>";
-    
-    }
-    else if($filesize >100000){
-        echo"<script>alert ('Image Size is too lerge');</script>";
-    }
-    else $newImageName =uniqid();
-    $newImageName .= '.' . $imageExtension;
-    move_uploaded_file($tmpName, 'img/',$newImageName);
-    $query= "INSERT INTO products VALUES('','$name','$newImageName')";
+if(isset($_POST['submit'])){
+    $title =$_POST['title'];
+    $title =$_POST['title'];
+    $price1 =$_POST['price1'];
+    $price2 =$_POST['price2'];
+   $imagename =  $_FILES['image']['file'];
 }
-;?>
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,17 +21,18 @@ else{
     <title>Document</title>
 </head>
 <body>
-    <form action="" method="post">
-        <label for="name">Name</label>
-        <input type="text" name="name"><br>
-        <label for="image">Image</label>
-        <input type="file" name="image" accept=".jpg, .png, .jpeg" value=""><br>
-        <label for="price1">price1</label>
-        <input type="text" name="price"><br>
-        <label for="price2">price2</label>
-        <input type="text" name="price2"><br>
-        <button type="submit">submit</button>
-        
+     <form action="<?php echo $_SERVER['PHP_SELF'] ;?>" method="POST" enctype="multipart/form-data">
+     <label for="Title">Tilte</label>
+     <input name="title" type="text"><br><br>
+     <label for="image">Image</label>
+     <input name="file" type="file"><br><br>
+     <h2>Price</h2>
+     <label for="price1">From</label>
+     <input name="price1" type="text"><br><br>
+     <label for="price2">To</label>
+     <input name="price2" type="text"><br><br>
+    <input type="submit" value="Done" name="submit">
+
     </form>
 </body>
 </html>
